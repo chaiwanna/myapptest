@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/api_provider/Api_Provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:my_app/notifications/notiList.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_app/page_two/bigc_coupon.dart';
 import 'package:my_app/app_bar/app_bar.dart';
@@ -96,8 +97,10 @@ class _PageTwoState extends State<PageTwo> {
         Padding(
           padding: const EdgeInsets.only(
               left: 0.0, top: 14, right: 0.0, bottom: 0.0),
-          child:
-              IconButton(icon: Icon(FontAwesomeIcons.bell), onPressed: () {}),
+          child: IconButton(
+              icon: Icon(FontAwesomeIcons.bell),
+              onPressed: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => notiList()))),
         )
       ],
     );

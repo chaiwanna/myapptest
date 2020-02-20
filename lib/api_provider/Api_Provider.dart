@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 //import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 import 'dart:convert';
 
 //อันแรก
@@ -25,7 +26,6 @@ class ApiProvider {
   }
 
   Future<http.Response> getPoint(String token) async {
-//    js['authToken'];
     String url = '$myrul/pointBalance/1135170000164357';
     Map<String, String> headers = {
       'Content-type': 'application/json',
@@ -58,11 +58,19 @@ class ApiProvider {
 
 //หน้าคูปองของฉัน
   Future<http.Response> getCoupon(String token) async {
-    int n = 5;
+    int n = 4;
     int pageNo = 1;
-    for (int i = 1; i <= n; i++) {
-      print(pageNo);
-      final urltest = Uri(
+    int i;
+    var list = [];
+    Map<String, String> headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'X-Auth-Token':
+          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCMTEzNTE3MDAwMDE2NDM1IiwibWVtIjoiMTM1MTcwMTcwMDE2NDM1MSIsImJnYyI6IjExMzUxNzAwMDAxNjQzNTcifQ.HzBLm18kXKnseta1Tr-2sevV0FXsPKR2_6F2GG9dbv8'
+      //
+    };
+    for (i = 0; i <= n; i++) {
+      final url = Uri(
         scheme: 'http',
         host: 'ocp.aspiron.co.th',
         path: '/OCPWEB/myCoupons',
@@ -72,81 +80,37 @@ class ApiProvider {
           'couponStatus': ['A'],
         },
       );
-      getUrl(urltest);
+      print(pageNo);
       pageNo++;
+
+      final getCouponreturn = await http.get(url, headers: headers);
+
+      try {
+        responseJson = json.decode(getCouponreturn.body);
+        print(getCouponreturn.statusCode);
+        if (getCouponreturn.statusCode == 200) {
+          list.add(responseJson);
+          print(list);
+          print(url);
+        } else {
+          print('Server error!');
+        }
+      } catch (error) {
+        print(error);
+      }
     }
-//
-//    final url = Uri(
-//      scheme: 'http',
-//      host: 'ocp.aspiron.co.th',
-//      path: '/OCPWEB/myCoupons',
-//      queryParameters: {
-//        'pageSize': ['10'],
-//        'pageNo': ['1'],
-//        'couponStatus': ['A'],
-//      },
-//    );
-//      print(j);
-
-//      var url = '$myrul/myCoupons?pageSize=10&pageNo=$i&couponStatus=A';
-//    Map<String, String> headers = {
-//      'Content-type': 'application/json',
-//      'Accept': 'application/json',
-//      'X-Auth-Token':
-//          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCMTEzNTE3MDAwMDE2NDM1IiwibWVtIjoiMTM1MTcwMTcwMDE2NDM1MSIsImJnYyI6IjExMzUxNzAwMDAxNjQzNTcifQ.HzBLm18kXKnseta1Tr-2sevV0FXsPKR2_6F2GG9dbv8'
-//      //
-//    };
-//    final getCoupon = await http.get(url, headers: headers);
-//    responseJson = json.decode(getCoupon.body);
-//    var test = json.encode(responseJson);
-//    print(test);
-//    print(responseJson);
-//
-//    return getCoupon;
+    return list[i];
   }
-
-  Future<http.Response> getUrl(url) async {
-    Map<String, String> headers = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'X-Auth-Token':
-          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCMTEzNTE3MDAwMDE2NDM1IiwibWVtIjoiMTM1MTcwMTcwMDE2NDM1MSIsImJnYyI6IjExMzUxNzAwMDAxNjQzNTcifQ.HzBLm18kXKnseta1Tr-2sevV0FXsPKR2_6F2GG9dbv8'
-      //
-    };
-
-    final getMyCoupon = await http.get(url, headers: headers);
-    responseJson = json.decode(getMyCoupon.body);
-    var test = json.encode(responseJson);
-    print(url);
-    print(test);
-    print(responseJson);
-    return getMyCoupon;
-  }
-
-//  Future<http.Response> getToken(String token) async {
-//    Map<String, String> headers = {
-//      'Content-type': 'application/json',
-//      'Accept': 'application/json',
-//      'X-Auth-Token':
-//          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCMTEzNTE3MDAwMDE2NDM1IiwibWVtIjoiMTM1MTcwMTcwMDE2NDM1MSIsImJnYyI6IjExMzUxNzAwMDAxNjQzNTcifQ.HzBLm18kXKnseta1Tr-2sevV0FXsPKR2_6F2GG9dbv8'
-//      //
-//    };
-//    token = headers;
-//    return getToken(token);
-////    final getCoupon = await http.get(url);
-////    responseJson = json.decode(getCoupon.body);
-////    var test = json.encode(responseJson);
-////    print(url);
-////    print(test);
-////    print(responseJson);
-//  }
 
   //หน้าคูปองบิ้กซี
-
   Future<http.Response> getBigC_Coupon(String token) async {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    print(formattedDate);
 //    js['authToken'];
     String url =
-        '$myrul/redeemCoupons?pageSize=10&pageNo=1&effectiveDate=2020-01-31&couponOwnerType=B';
+        '$myrul/redeemCoupons?pageSize=10&pageNo=1&effectiveDate=$formattedDate&couponOwnerType=B';
     Map<String, String> headers = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -160,34 +124,40 @@ class ApiProvider {
     print(responseJson.keys);
     return getBigC_Coupon;
   }
-//
-//class Job {
-//  final int id;
-//  final String position;
-//  final String company;
-//  final String description;
-//
-//  Job({this.id, this.position, this.company, this.description});
-//
-//  factory Job.fromJson(Map<String, dynamic> json) {
-//    return Job(
-//      id: json['id'],
-//      position: json['position'],
-//      company: json['company'],
-//      description: json['description'],
-//    );
-//  }
-//  Future<List<Job>> _fetchJobs() async {
-//    final jobsListAPIUrl =
-//        'http://ocp.aspiron.co.th/OCPWEB/myCoupons?pageSize=10&pageNo=1&couponStatus=A';
-//    final response = await http.get(jobsListAPIUrl);
-//
-//    if (response.statusCode == 200) {
-//      List jsonResponse = json.decode(response.body);
-//      return jsonResponse.map((job) => new Job.fromJson(job)).toList();
-//    } else {
-//      throw Exception('Failed to load jobs from API');
-//    }
-//  }
-//}
+
+  //หน้าคูปองบิ้กซี
+  Future<http.Response> getshop_Coupon(String token) async {
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+    print(formattedDate);
+//    js['authToken'];
+    String url =
+        '$myrul/redeemCoupons?pageSize=10&pageNo=1&effectiveDate=$formattedDate&couponOwnerType=O&categoryCode=';
+    Map<String, String> headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'X-Auth-Token':
+          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCMTEzNTE3MDAwMDE2NDM1IiwibWVtIjoiMTM1MTcwMTcwMDE2NDM1MSIsImJnYyI6IjExMzUxNzAwMDAxNjQzNTcifQ.HzBLm18kXKnseta1Tr-2sevV0FXsPKR2_6F2GG9dbv8'
+      //
+    };
+
+    final getshop_Coupon = await http.get(url, headers: headers);
+    responseJson = json.decode(getshop_Coupon.body);
+    print(responseJson.keys);
+    return getshop_Coupon;
+  }
+
+  Future<http.Response> getnotifications(String token) async {
+    String url = '$myrul/notiList';
+    Map<String, String> headers = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'X-Auth-Token':
+          'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJCMTEzNTE3MDAwMDE2NDM1IiwibWVtIjoiMTM1MTcwMTcwMDE2NDM1MSIsImJnYyI6IjExMzUxNzAwMDAxNjQzNTcifQ.HzBLm18kXKnseta1Tr-2sevV0FXsPKR2_6F2GG9dbv8'
+      //
+    };
+    final getnotifications = await http.get(url, headers: headers);
+    return getnotifications;
+  }
 }

@@ -85,9 +85,9 @@ class _LoginState extends State<Login> {
                         children: <Widget>[
                           TextFormField(
                             // ignore: missing_return
-//                            validator: (String value) {
-//                              if (value.isEmpty) return 'กรุณาระบุ';
-//                            },
+                            validator: (String value) {
+                              if (value.isEmpty) return 'กรุณาระบุ';
+                            },
                             controller: username,
                             decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.person),
@@ -102,9 +102,9 @@ class _LoginState extends State<Login> {
                           ),
                           TextFormField(
                             // ignore: missing_return
-//                            validator: (String value) {
-//                              if (value.isEmpty) return 'กรุณาระบุรหัสผ่าน';
-//                            },
+                            validator: (String value) {
+                              if (value.isEmpty) return 'กรุณาระบุรหัสผ่าน';
+                            },
 
                             controller: password,
                             obscureText: true,

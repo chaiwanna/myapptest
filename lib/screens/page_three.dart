@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/page_three/special_privileges.dart';
 import 'package:my_app/page_three/shop_coupon.dart';
+import 'package:my_app/notifications/notiList.dart';
 
 class Pagethree extends StatefulWidget {
   @override
@@ -97,8 +98,10 @@ class _PagethreeState extends State<Pagethree> {
         Padding(
           padding: const EdgeInsets.only(
               left: 0.0, top: 14, right: 0.0, bottom: 0.0),
-          child:
-              IconButton(icon: Icon(FontAwesomeIcons.bell), onPressed: () {}),
+          child: IconButton(
+              icon: Icon(FontAwesomeIcons.bell),
+              onPressed: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => notiList()))),
         )
       ],
     );

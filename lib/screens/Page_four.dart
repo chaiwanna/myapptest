@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:flutter/material.dart';
 import 'package:my_app/page_four/mycoupon.dart';
+import 'package:my_app/notifications/notiList.dart';
 
 import 'package:my_app/colors/Colors.dart';
 
@@ -75,12 +76,14 @@ class _PagefourState extends State<Pagefour> {
         Padding(
           padding: const EdgeInsets.only(
               left: 0.0, top: 14, right: 0.0, bottom: 0.0),
-          child:
-              IconButton(icon: Icon(FontAwesomeIcons.bell), onPressed: () {}),
+          child: IconButton(
+              icon: Icon(FontAwesomeIcons.bell),
+              onPressed: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => notiList()))),
         )
       ],
     );
 
-    return Scaffold(appBar: appBar, body: MyCoupon());
+    return Scaffold(appBar: appBar, body: new MyCoupon());
   }
 }

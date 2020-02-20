@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:my_app/api_provider/Api_Provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:my_app/notifications/notiList.dart';
+import 'package:my_app/page_one/imagecarousel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:my_app/comment/bluegifts.dart';
 import 'package:my_app/comment/productlist.dart';
@@ -14,57 +16,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:my_app/colors/Colors.dart';
 
-final List<String> imageList = [
-  'assets/images/member.jpg',
-  'assets/images/Rejoice.jpeg',
-  'assets/images/pic1.jpg',
-  'assets/images/table.jpg'
-];
-
-final List child = map<Widget>(imageList, (index, i) {
-  return Container(
-    margin: EdgeInsets.all(15.0),
-    child: ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-      child: Stack(
-        children: <Widget>[
-          Image.asset(i, fit: BoxFit.cover, width: 1500.0),
-          Positioned(
-            bottom: 0.0,
-            left: 0.0,
-            right: 0.0,
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color.fromARGB(200, 0, 0, 0),
-                    Color.fromARGB(0, 0, 0, 0)
-                  ],
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                ),
-              ),
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: Text(
-                'No. $index image',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          )
-        ],
-      ),
-    ),
-  );
-}).toList();
-
-List<T> map<T>(List list, Function handler) {
-  List<T> result = [];
-  for (var i = 0; i < list.length; i++) {
-    result.add(handler(i, list[i]));
-  }
-  return result;
-}
-
 class PageOne extends StatefulWidget {
   @override
   _PageOneState createState() => _PageOneState();
@@ -72,6 +23,13 @@ class PageOne extends StatefulWidget {
 
 class _PageOneState extends State<PageOne> {
   int pointPost;
+  int totalRecord;
+  int pageSize;
+  int n = 5;
+  var pageNo;
+  var paging;
+  var data;
+  bool _isLoading = true;
   ApiProvider apiProvider = ApiProvider();
   Future getProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -103,7 +61,6 @@ class _PageOneState extends State<PageOne> {
     getProfile();
   }
 
-  int _current = 0;
   @override
   Widget build(BuildContext context) {
     Widget appBar = AppBar(
@@ -150,40 +107,12 @@ class _PageOneState extends State<PageOne> {
         Padding(
           padding: const EdgeInsets.only(
               left: 0.0, top: 14, right: 0.0, bottom: 0.0),
-          child:
-              IconButton(icon: Icon(FontAwesomeIcons.bell), onPressed: () {}),
-        )
-      ],
-    );
-    Widget imageCarousel = new Column(
-      children: [
-        CarouselSlider(
-          items: child,
-          autoPlay: true,
-          autoPlayAnimationDuration: Duration(milliseconds: 1000),
-          enlargeCenterPage: true,
-          aspectRatio: 2.0,
-          onPageChanged: (index) {
-            setState(() {
-              _current = index;
-            });
-          },
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: map<Widget>(imageList, (index, i) {
-            return Container(
-              width: 20.0,
-              height: 8.0,
-              margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: _current == index
-                    ? Colors.purple
-                    : Color.fromRGBO(0, 0, 0, 0.4),
-              ),
-            );
-          }),
+          child: IconButton(
+              icon: Icon(FontAwesomeIcons.bell),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => notiList()));
+              }),
         )
       ],
     );
@@ -198,20 +127,9 @@ class _PageOneState extends State<PageOne> {
                     Container(
                       child: Column(
                         children: <Widget>[
-//                          CustomScrollView(
-//                            slivers: <Widget>[
-//                              SliverAppBar(
-//                                pinned: true,
-//                                expandedHeight: 256.0,
-//                                flexibleSpace: FlexibleSpaceBar(
-//                                  title: imageCarousel
-//                                ),
-//                              )
-//                            ],
-//                          ),
                           Container(
                             color: HexColor('#bbce00'),
-                            child: imageCarousel,
+                            child: ImageCarousel(),
                           ),
                           Row(
                             children: <Widget>[

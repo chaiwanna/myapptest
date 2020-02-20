@@ -15,6 +15,7 @@ class _BigC_CouPonState extends State<BigC_CouPon> {
   int totalRecord;
   bool _isLoading = true;
   var data;
+  var pageNo;
 
   ApiProvider apiProvider = ApiProvider();
   Future getBigC_Coupon() async {
@@ -32,6 +33,7 @@ class _BigC_CouPonState extends State<BigC_CouPon> {
             _isLoading = false;
             data = jsonRes['data'];
             print(data);
+            pageNo = jsonRes['paging']['pageNo'];
             totalRecord = jsonRes['paging']['totalRecord'];
           });
         } else {
@@ -67,7 +69,7 @@ class _BigC_CouPonState extends State<BigC_CouPon> {
               children: [loading],
             ))
           : ListView.builder(
-              itemCount: 5,
+              itemCount: 1,
               itemBuilder: (context, position) {
                 return Padding(
                   padding:
